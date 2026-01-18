@@ -1,20 +1,10 @@
 # 🛠️ Clinton Neovim Configuration
 
-A modern, minimal, and fast Neovim setup powered by **Lazy.nvim**. This config is optimized for web development, LSP support, terminal workflows, and smooth navigation.
+A modern, minimal, and fast Neovim setup powered by **Lazy.nvim**. This config is optimized for programming.
 
-My use of Neovim is very minimalist and very focused on defaults. I also forbid myself to fumble around split screens and tabs.
-
-**Disclaimer: Fork this if you want to use it. I constantly improve my configuration over time so this repo will change slightly.**
+My use of Neovim is very minimalist and very focused on native functionality.
 
 ## My workflow
-### Few new bindings
-I want to have to remember only a few bindings. I'm not interested in re-learning 100 bindings. If I can't list the bindings one by one it's probably too many.
-
-### No split screens
-I use the floating terminal instead of split screen. When I need two screens I open Neovim in a second monitor. I hate split screens with a passion and find that it overcomplicates my workflow to have to remember how to switch between editor screens when I already by habit switch between monitors and windows with my Hyperland setup.
-
-Hitting <leader>t to open a floating terminal, do what I need there, then :q is perfect and doesn't get in the way.
-
 ### No tabs
 I switch between buffers instead of tabs (and close buffers when I no longer need them open). More than 3 buffers is usually too much.
 
@@ -30,6 +20,8 @@ This is why I try to stay as Vim fundie as possible. Every new change is a new h
 
 ### Plugins that save time
 I'm ok with plugins as long as they bring large productivity gains. You can see the plugins I use below. If I use a plugin it's because it's almost impossible to live without it.
+
+Side note: I feel that most of the plugins out there are learned helplessness or "another way" of learning what Vim already has. The goal is to grow with Neovim, not a bunch of plugins that get me further away from bare metal.
 
 ---
 
@@ -67,13 +59,6 @@ q and w have Q and W aliases because I keep accidentally hitting those.
 |-----------------|------|----------------------|
 | `<Tab>`         | `n`  | Go to next buffer    |
 | `<S-Tab>`       | `n`  | Go to previous buffer|
-
-### ⬇️ Smooth Scrolling (Neoscroll)
-
-| Mapping         | Mode    | Action                      |
-|-----------------|---------|-----------------------------|
-| `<C-d>`         | `n/v/x` | Smooth scroll down          |
-| `<C-u>`         | `n/v/x` | Smooth scroll up            |
 
 ---
 
@@ -162,6 +147,3 @@ Shows:
 - First 3 lines with diagnostics (e.g. `Lines 4, 10, 22...`)
 
 ---
-
-> Feel free to extend this setup with additional plugins, keymaps, or colorschemes.
-
