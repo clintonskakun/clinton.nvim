@@ -247,6 +247,7 @@ function GetErrorLines()
 end
 
 -- Appearance
+vim.cmd.colorscheme 'habamax'
 vim.opt.clipboard = "unnamedplus"
 vim.opt.number = true
 vim.opt.relativenumber = true
