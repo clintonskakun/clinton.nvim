@@ -88,8 +88,8 @@ require('lazy').setup({
 local keymap = vim.keymap.set
 
 -- Key mappings
-vim.g.mapleader = 'Alt'
-vim.g.localleader = 'Alt'
+vim.g.mapleader = ' '
+vim.g.localleader = ' '
 
 -- Telescope
 local builtin = require('telescope.builtin')

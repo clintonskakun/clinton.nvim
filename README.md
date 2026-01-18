@@ -5,7 +5,7 @@
 q and w have Q and W aliases because I keep accidentally hitting those.
 bd, bD, Bd, BD are aliases as well
 
-> `Leader key`: `Alt`
+> `Leader key`: `Space`
 
 ### 🔍 Telescope (Fuzzy Finder)
 
