@@ -88,8 +88,8 @@ require('lazy').setup({
 local keymap = vim.keymap.set
 
 -- Key mappings
-vim.g.mapleader = ' '
-vim.g.localleader = ' '
+vim.g.mapleader = 'Alt'
+vim.g.localleader = 'Alt'
 
 local modes = { 'n', 'v', 'x' }
 
@@ -284,11 +284,12 @@ vim.opt.statusline = '%F%=%{v:lua.GetErrorLines()}%{v:lua.GetDiagnosisCounts()}'
 -- Turn off mouse
 vim.opt.mouse = ''
 
--- Define :Q to run the existing :q command
 vim.api.nvim_create_user_command("Q", "quit", { nargs = 0 })
-
--- Define :W to run the existing :w command
 vim.api.nvim_create_user_command("W", "write", { nargs = 0 })
+vim.keymap.set('n', 'Bd', '<cmd>bdelete<CR>', { desc = 'Buffer Delete' })
+
+-- Map BD to :bdelete! (Force delete, ignoring unsaved changes)
+vim.keymap.set('n', 'BD', '<cmd>bdelete!<CR>', { desc = 'Force Buffer Delete' })
 
 -- See open buffers
 keymap('n', '<leader>b', '<cmd>Telescope buffers<CR>', { desc = 'Open new tab' })
