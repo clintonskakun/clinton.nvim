@@ -69,7 +69,7 @@ require('lazy').setup({
 			direction = 'float'
 		})
 	end
-},
+	},
 
 -- Completion stuff
 { 'hrsh7th/nvim-cmp' },
@@ -90,12 +90,6 @@ local keymap = vim.keymap.set
 -- Key mappings
 vim.g.mapleader = 'Alt'
 vim.g.localleader = 'Alt'
-
-local modes = { 'n', 'v', 'x' }
-
-for key, func in pairs(_keymap) do
-	keymap(modes, key, func)
-end
 
 -- Telescope
 local builtin = require('telescope.builtin')
