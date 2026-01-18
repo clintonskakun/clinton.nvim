@@ -188,13 +188,13 @@ cmp.setup({
 })
 
 -- Setup mason so it can manage LSP servers
-require('mason').setup()
-require('mason-lspconfig').setup()
+-- require('mason').setup()
+-- require('mason-lspconfig').setup()
 
 -- Setup language servers.
-require('mason-lspconfig').setup({
-	ensure_installed = { 'prismals', 'svelte', 'ts_ls' }
-})
+-- require('mason-lspconfig').setup({
+--	ensure_installed = { 'prismals', 'svelte', 'ts_ls' }
+--})
 
 keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<CR>', { desc = "Toggle diagnotic" })
 
