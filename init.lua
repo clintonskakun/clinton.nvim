@@ -254,8 +254,8 @@ vim.opt.relativenumber = true
 
 vim.opt.cursorline = true
 vim.opt.termguicolors = true      -- Enable true color support
-vim.opt.syntax = 'on'             -- Enable syntax highlighting
-vim.o.showtabline = 1
+vim.opt.syntax = 'off'             -- Enable syntax highlighting
+vim.o.showtabline = 0
 
 -- Line numbers that one can see
 vim.api.nvim_set_hl(0, 'LineNrAbove', { fg = 'lightgray' })
