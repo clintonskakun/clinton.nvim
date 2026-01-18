@@ -17,7 +17,7 @@ require('lazy').setup({
 	-- For creating dirs when creating a file with :e dir-that-doesnt-exist/thing.txt
 	{ 'jghauser/mkdir.nvim' },
 	-- Icons
-	{ 'nvim-tree/nvim-web-devicons', lazy = true },
+	{ 'nvim-tree/nvim-web-devicons' },
 	-- Syntax stuff
 	{
 		'nvim-treesitter/nvim-treesitter',
