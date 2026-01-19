@@ -23,8 +23,8 @@ require('lazy').setup({
 		'nvim-treesitter/nvim-treesitter',
 		config = function()
 			require('nvim-treesitter.config').setup({
-				ensure_installed = { 'lua', 'javascript', 'typescript', 'html', 'css', 'svelte', 'prisma' },
-				sync_install = false,
+				ensure_installed = { 'javascript', 'typescript', 'html', 'css', 'svelte', 'prisma', 'html' },
+				sync_install = true,
 				auto_install = true,
 				highlight = {
 					enable = true,
@@ -32,6 +32,7 @@ require('lazy').setup({
 				indent = { enable = true }
 			})
 		end,
+		build = ':TSUpdate'
 	},
 	-- Obvious why we need this
 	{
