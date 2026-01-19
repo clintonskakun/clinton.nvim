@@ -1,77 +1,40 @@
-local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-
-if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		'git',
-		'clone',
-		'--filter=blob:none',
-		'https://github.com/folke/lazy.nvim.git',
-		'--branch=stable',
-		lazypath,
-	})
-end
-
-vim.opt.rtp:prepend(lazypath)
-
-require('lazy').setup({
-	-- For creating dirs when creating a file with :e dir-that-doesnt-exist/thing.txt
-	{ 'jghauser/mkdir.nvim' },
-	-- Icons
-	{ 'nvim-tree/nvim-web-devicons' },
+-- Add homegrown mkdir, toggle term
+-- Add mini pick instead of telescope
+vim.pack.add({
 	{
-		'nvim-treesitter/nvim-treesitter',
-		lazy = false,
-		build = ':TSUpdate',
-		tag = 'v0.10.0',
-		config = function()
-			require("nvim-treesitter.configs").setup({
-				ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "c", "zig", "rust", "go", "haskell", "lua", "gitignore" },
-				sync_install = true,
-				auto_install = true,
-				highlight = {
-					enable = true
-				},
-				additional_vim_regex_highlighting = false
-			})
-		end
+		'https://github.com/nvim-treesitter/nvim-treesitter',
+		version = 'v0.10.0',
 	},
-	-- Obvious why we need this
 	{
-		'nvim-telescope/telescope.nvim',
-		dependencies = { 'nvim-lua/plenary.nvim' },
-		config = function()
-			require('telescope').setup({
-				defaults = {
-					path_display = { 'full' },
+		'https://github.com/nvim-telescope/telescope.nvim'
+	}
+})
 
-					layout_strategy = 'vertical',
+require("nvim-treesitter.configs").setup({
+	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "c", "zig", "rust", "go", "haskell", "lua", "gitignore" },
+	sync_install = true,
+	auto_install = true,
+	highlight = {
+		enable = true
+	},
+	additional_vim_regex_highlighting = false
+})
 
-					layout_config = {
-						width = 0.95,
-						height = 0.95,
-						vertical = {
-							mirror = true,
-							preview_height = 0.6,
-						}
-					},
-				}
-			})
-			require('telescope').load_extension('fzf')
-		end
-	},
-	-- To make indexing/searching faster
-	{
-		'nvim-telescope/telescope-fzf-native.nvim',
-		build = 'make',
-	},
-	-- Our floating terminal
-	{ 'akinsho/toggleterm.nvim', version = "*", 
-	config = function()
-		require('toggleterm').setup({
-			direction = 'float'
-		})
-	end
-	},
+require('telescope').setup({
+	defaults = {
+		path_display = { 'full' },
+
+		layout_strategy = 'vertical',
+
+		layout_config = {
+			width = 0.95,
+			height = 0.95,
+			vertical = {
+				mirror = true,
+				preview_height = 0.6,
+			}
+		},
+	}
 })
 
 vim.lsp.config['ts_ls'] = {
@@ -108,8 +71,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     local opts = { buffer = buf }
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)     -- Go to Definition
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)           -- Hover Documentation
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts) -- Rename
-    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts) -- Code Actions
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)   -- Previous Error
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)   -- Next Error
   end,
@@ -235,8 +196,6 @@ end
 
 -- Set your keybind (normal mode)
 keymap("n", "<leader>p", toggle_term_in_buf_dir, { noremap = true, silent = true, desc = 'Open floating terminal in current buffer directory' })
-
-
 
 -- Appearance
 vim.cmd.colorscheme 'habamax'
