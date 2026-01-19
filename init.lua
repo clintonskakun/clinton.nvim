@@ -255,7 +255,7 @@ vim.opt.tabstop = 2               -- Number of spaces a <Tab> in the file counts
 vim.opt.shiftwidth = 2            -- Size of an indent
 vim.opt.softtabstop = 2           -- Number of spaces to insert for a <Tab>
 vim.opt.expandtab = true          -- Use spaces instead of tabs
-wim.opt.swapfile = false          -- Turn off annoying swapfile behav
+vim.opt.swapfile = false          -- Turn off annoying swapfile behav
 
 -- Status bar
 vim.opt.statusline = '%F%=%{v:lua.GetErrorLines()}%{v:lua.GetDiagnosisCounts()}'
