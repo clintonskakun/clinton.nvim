@@ -22,7 +22,7 @@ require('lazy').setup({
 		'nvim-treesitter/nvim-treesitter',
 		lazy = false,
 		build = ':TSUpdate',
-		branch = 'master',
+		tag = 'v0.10.0',
 		config = function()
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "c", "zig", "rust", "go", "haskell", "lua", "gitignore" },
