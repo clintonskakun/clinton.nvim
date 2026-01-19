@@ -1,3 +1,7 @@
+-- Key mappings
+vim.g.mapleader = ' '
+vim.g.localleader = ' '
+
 vim.pack.add({
 	{
 		src = 'https://github.com/nvim-treesitter/nvim-treesitter',
@@ -157,11 +161,6 @@ function GetErrorLines()
 	return "Lines " .. table.concat(unique_lines, ", ") .. "... "
 end
 
-local keymap = vim.keymap.set
-
--- Key mappings
-vim.g.mapleader = ' '
-vim.g.localleader = ' '
 
 local state = { buf = -1, win = -1 }
 
@@ -274,5 +273,5 @@ vim.api.nvim_create_user_command("Q", "quit", { nargs = 0 })
 vim.api.nvim_create_user_command("W", "write", { nargs = 0 })
 
 -- Navigate between buffers
-keymap('n', '<Tab>', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
-keymap('n', '<S-Tab>', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
+vim.keymap.set('n', '<Tab>', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
+vim.keymap.set('n', '<S-Tab>', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
