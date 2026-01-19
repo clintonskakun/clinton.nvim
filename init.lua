@@ -1,5 +1,3 @@
--- Add homegrown mkdir, toggle term
--- Add mini pick instead of telescope
 vim.pack.add({
 	{
 		src = 'https://github.com/nvim-treesitter/nvim-treesitter',
@@ -8,7 +6,6 @@ vim.pack.add({
 })
 
 -- Treesitter
-
 require("nvim-treesitter.configs").setup({
 	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "lua", "gitignore" },
 	sync_install = false,
@@ -20,7 +17,6 @@ require("nvim-treesitter.configs").setup({
 })
 
 -- LSPs
-
 vim.lsp.config['ts'] = {
   cmd = { 'typescript-language-server', '--stdio' },
   filetypes = { 'typescript', 'javascript' },
@@ -61,6 +57,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+-- Diagnostic popup
 vim.diagnostic.config({
 	underline = true,
 	virtual_text = true,
@@ -184,6 +181,20 @@ vim.api.nvim_create_autocmd('TermOpen', {
 	end,
 	desc = 'Set terminal keymaps on open',
 })
+
+-- Makedir -P on creating new files
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = vim.api.nvim_create_augroup("AutoMkdir", { clear = true }),
+  pattern = "*",
+  callback = function(ctx)
+    local dir = vim.fn.fnamemodify(ctx.file, ":p:h")
+    -- If the directory doesn't exist, create it (mkdir -p behavior)
+    if vim.fn.isdirectory(dir) == 0 then
+      vim.fn.mkdir(dir, "p")
+    end
+  end,
+})
+
 --
 -- Appearance
 vim.cmd.colorscheme 'habamax'
