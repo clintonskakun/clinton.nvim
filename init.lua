@@ -154,7 +154,10 @@ keymap("n", "<leader>p", toggle_term_in_buf_dir, { noremap = true, silent = true
 vim.diagnostic.config({
 	underline = true,
 	virtual_text = true,
-	signs = true
+	signs = true,
+	float = {
+		border = "rounded",
+	}
 });
 
 -- LSP
