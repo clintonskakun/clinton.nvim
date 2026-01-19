@@ -14,7 +14,7 @@ local MiniPick = require("mini.pick")
 
 MiniPick.setup({
 	window = {
-		confix = {
+		config = {
 			-- Fullscreen dimensions
 			height = vim.o.lines,
 			width = vim.o.columns,
