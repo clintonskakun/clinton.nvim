@@ -2,7 +2,8 @@ vim.pack.add({
 	{
 		src = 'https://github.com/nvim-treesitter/nvim-treesitter',
 		version = 'v0.10.0',
-	}
+	},
+	"https://github.com/nvim-mini/mini.pick"
 })
 
 -- Treesitter
