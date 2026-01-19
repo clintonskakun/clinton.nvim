@@ -8,7 +8,7 @@ vim.pack.add({
 })
 
 require("nvim-treesitter.configs").setup({
-	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "c", "zig", "rust", "go", "haskell", "lua", "gitignore" },
+	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "lua", "gitignore" },
 	sync_install = true,
 	auto_install = true,
 	highlight = {
