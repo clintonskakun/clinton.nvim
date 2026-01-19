@@ -33,7 +33,7 @@ vim.keymap.set('n', '<leader>f', function()
 end, { desc = 'Find Files' })
 
 vim.keymap.set('n', '<leader>g', function()
-  MiniPick.builtin.grep(
+  MiniPick.builtin.grep_live(
     { 
       tool = 'rg', 
       command = { 
