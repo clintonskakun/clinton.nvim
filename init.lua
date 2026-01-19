@@ -109,7 +109,7 @@ vim.diagnostic.config({
 	virtual_text = true,
 	signs = true,
 	float = {
-		border = "rounded",
+		border = "single",
 	}
 });
 
@@ -178,7 +178,7 @@ local function open_float()
                    math.floor(vim.o.lines * 0.8)
 
     state.win = vim.api.nvim_open_win(state.buf, true, {
-        relative = "editor", style = "minimal", border = "rounded",
+        relative = "editor", style = "minimal", border = "single",
         width = width,
 	height = height,
 	col = (vim.o.columns - width)/2,
