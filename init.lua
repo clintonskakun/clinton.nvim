@@ -18,22 +18,6 @@ require('lazy').setup({
 	{ 'jghauser/mkdir.nvim' },
 	-- Icons
 	{ 'nvim-tree/nvim-web-devicons' },
-	-- Syntax stuff
-	{
-		'nvim-treesitter/nvim-treesitter',
-		config = function()
-			require('nvim-treesitter.config').setup({
-				ensure_installed = { 'javascript', 'typescript', 'html', 'css', 'svelte', 'prisma', 'html' },
-				sync_install = true,
-				auto_install = true,
-				highlight = {
-					enable = true,
-				},
-				indent = { enable = true }
-			})
-		end,
-		build = ':TSUpdate'
-	},
 	-- Obvious why we need this
 	{
 		'nvim-telescope/telescope.nvim',
@@ -197,8 +181,6 @@ require('mason-lspconfig').setup({
 	ensure_installed = { 'prismals', 'svelte', 'ts_ls' }
 })
 
-keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.open_float()<CR>', { desc = "Toggle diagnotic" })
-
 -- Diagnosis Counts
 function GetDiagnosisCounts()
 	-- Get counts for ONLY ERRORS in the current buffer
@@ -254,8 +236,8 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 
 vim.opt.cursorline = true
-vim.opt.termguicolors = true      -- Enable true color support
-vim.opt.syntax = 'off'             -- Enable syntax highlighting
+vim.opt.termguicolors = true
+vim.opt.syntax = 'on'
 vim.o.showtabline = 0
 
 -- Line numbers that one can see
@@ -264,15 +246,16 @@ vim.api.nvim_set_hl(0, 'LineNrBelow', { fg = 'lightgray' })
 vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = 'orange', bold = true })
 
 -- Behavior
-vim.opt.ignorecase = true         -- Ignore case in search
-vim.opt.smartcase = true          -- But be case-sensitive if the query has uppercase letters
-vim.o.confirm = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.confirm = true
 
 -- Tabs & Indentation
 vim.opt.tabstop = 2               -- Number of spaces a <Tab> in the file counts for
 vim.opt.shiftwidth = 2            -- Size of an indent
 vim.opt.softtabstop = 2           -- Number of spaces to insert for a <Tab>
 vim.opt.expandtab = true          -- Use spaces instead of tabs
+wim.opt.swapfile = false          -- Turn off annoying swapfile behav
 
 -- Status bar
 vim.opt.statusline = '%F%=%{v:lua.GetErrorLines()}%{v:lua.GetDiagnosisCounts()}'
@@ -281,13 +264,6 @@ vim.opt.mouse = ''
 
 vim.api.nvim_create_user_command("Q", "quit", { nargs = 0 })
 vim.api.nvim_create_user_command("W", "write", { nargs = 0 })
-vim.keymap.set('n', 'Bd', '<cmd>bdelete<CR>', { desc = 'Buffer Delete' })
-
--- Map BD to :bdelete! (Force delete, ignoring unsaved changes)
-vim.keymap.set('n', 'BD', '<cmd>bdelete!<CR>', { desc = 'Force Buffer Delete' })
-
--- See open buffers
-keymap('n', '<leader>b', '<cmd>Telescope buffers<CR>', { desc = 'Open new tab' })
 
 -- Navigate between buffers
 keymap('n', '<Tab>', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
