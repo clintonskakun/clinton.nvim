@@ -177,12 +177,6 @@ local keymap = vim.keymap.set
 -- Key mappings
 vim.g.mapleader = ' '
 vim.g.localleader = ' '
---
--- <leader>a -> Triggers LSP (Omni) Completion
-vim.keymap.set('i', '<Ctrl>a', '<C-x><C-o>', { noremap = true, silent = true })
-
--- <leader>u -> Triggers Path (File) Completion
-vim.keymap.set('i', '<Ctrl>af', '<C-x><C-f>', { noremap = true, silent = true })
 
 -- Telescope
 local builtin = require('telescope.builtin')
