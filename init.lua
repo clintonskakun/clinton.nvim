@@ -6,7 +6,65 @@ vim.pack.add({
 	"https://github.com/nvim-mini/mini.pick"
 })
 
-require("mini.pick").setup()
+require("mini.pick").setup({
+	window = {
+		confix = {
+			-- Fullscreen dimensions
+			height = vim.o.lines,
+			width = vim.o.columns,
+			-- Top-left corner
+			row = 0,
+			col = 0,
+			-- Remove border for true fullscreen look (optional)
+			border = 'none', 
+		}
+	}
+})
+local win_config = function()
+  return {
+    -- Fullscreen dimensions
+    height = vim.o.lines,
+    width = vim.o.columns,
+    -- Top-left corner
+    row = 0,
+    col = 0,
+    -- Remove border for true fullscreen look (optional)
+    border = 'none', 
+  }
+end
+
+require('mini.pick').setup({
+  window = {
+    config = win_config,
+    prompt_prefix = '🔎 ', 
+  },
+})
+
+vim.keymap.set('n', '<leader>f', function()
+  MiniPick.builtin.files()
+end, { desc = 'Find Files' })
+
+vim.keymap.set('n', '<leader>g', function()
+  MiniPick.builtin.grep(
+    { 
+      tool = 'rg', 
+      command = { 
+        'rg', 
+        '--column', 
+        '--line-number', 
+        '--no-heading', 
+        '--color=always', 
+        '--smart-case', 
+        '--fixed-strings' -- This flag disables Regex
+      } 
+    }
+  )
+end, { desc = 'Grep Fixed String' })
+
+vim.keymap.set('n', '<leader>r', function()
+  MiniPick.builtin.resume()
+end, { desc = 'Resume last picker' })
+
 require("nvim-treesitter.configs").setup({
 	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "lua", "gitignore" },
 	sync_install = false,
