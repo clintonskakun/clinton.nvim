@@ -76,7 +76,7 @@ require('lazy').setup({
 
 vim.lsp.config['ts_ls'] = {
   cmd = { 'typescript-language-server', '--stdio' },
-  filetypes = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact' },
+  filetypes = { 'typescript', 'javascript' },
   root_markers = { 'package.json', 'tsconfig.json', '.git' },
 }
 
@@ -179,10 +179,10 @@ vim.g.mapleader = ' '
 vim.g.localleader = ' '
 --
 -- <leader>a -> Triggers LSP (Omni) Completion
-vim.keymap.set('i', '<leader>a', '<C-x><C-o>', { noremap = true, silent = true })
+vim.keymap.set('i', '<Ctrl>a', '<C-x><C-o>', { noremap = true, silent = true })
 
 -- <leader>u -> Triggers Path (File) Completion
-vim.keymap.set('i', '<leader>u', '<C-x><C-f>', { noremap = true, silent = true })
+vim.keymap.set('i', '<Ctrl>af', '<C-x><C-f>', { noremap = true, silent = true })
 
 -- Telescope
 local builtin = require('telescope.builtin')
