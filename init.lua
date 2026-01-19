@@ -254,7 +254,7 @@ vim.opt.relativenumber = true
 
 vim.opt.cursorline = true
 vim.opt.termguicolors = true
-vim.opt.syntax = 'on'
+vim.opt.syntax = 'off'
 vim.o.showtabline = 0
 
 -- Line numbers that one can see
