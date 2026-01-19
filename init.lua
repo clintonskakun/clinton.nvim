@@ -6,7 +6,9 @@ vim.pack.add({
 	"https://github.com/nvim-mini/mini.pick"
 })
 
-require("mini.pick").setup({
+local MiniPick = require("mini.pick")
+
+MiniPick.setup({
 	window = {
 		confix = {
 			-- Fullscreen dimensions
@@ -20,25 +22,7 @@ require("mini.pick").setup({
 		}
 	}
 })
-local win_config = function()
-  return {
-    -- Fullscreen dimensions
-    height = vim.o.lines,
-    width = vim.o.columns,
-    -- Top-left corner
-    row = 0,
-    col = 0,
-    -- Remove border for true fullscreen look (optional)
-    border = 'none', 
-  }
-end
 
-require('mini.pick').setup({
-  window = {
-    config = win_config,
-    prompt_prefix = '🔎 ', 
-  },
-})
 
 vim.keymap.set('n', '<leader>f', function()
   MiniPick.builtin.files()
