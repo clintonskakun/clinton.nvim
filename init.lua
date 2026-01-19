@@ -6,7 +6,7 @@ vim.pack.add({
 	"https://github.com/nvim-mini/mini.pick"
 })
 
--- Treesitter
+require("mini.pick").setup()
 require("nvim-treesitter.configs").setup({
 	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "lua", "gitignore" },
 	sync_install = false,
@@ -17,7 +17,6 @@ require("nvim-treesitter.configs").setup({
 	additional_vim_regex_highlighting = false
 })
 
--- LSPs
 vim.lsp.config['ts'] = {
   cmd = { 'typescript-language-server', '--stdio' },
   filetypes = { 'typescript', 'javascript' },
@@ -196,57 +195,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
-local function fuzzy_finder()
-    -- 1. Create a fullscreen floating window
-    local buf = vim.api.nvim_create_buf(false, true)
-    local win = vim.api.nvim_open_win(buf, true, {
-        relative = 'editor', row = 0, col = 0, width = vim.o.columns, height = vim.o.lines,
-        style = 'minimal', border = 'none'
-    })
-
-    -- 2. Get all files (adjust "find" command if on Windows/Powershell)
-    local all_files = vim.fn.systemlist("find . -type f -not -path '*/.*'")
-
-    -- 3. Initial Render: Line 1 is empty (prompt), Lines 2+ are files
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "" })
-    vim.api.nvim_buf_set_lines(buf, 1, -1, false, all_files)
-    vim.cmd('startinsert') -- Auto focus input
-
-    -- 4. Filtering Logic (Runs on every keystroke)
-    vim.api.nvim_create_autocmd("TextChangedI", {
-        buffer = buf,
-        callback = function()
-            local query = vim.api.nvim_buf_get_lines(buf, 0, 1, false)[1]
-            -- Use Neovim's built-in fuzzy matcher
-            local results = (query == "") and all_files or vim.fn.matchfuzzy(all_files, query)
-            vim.api.nvim_buf_set_lines(buf, 1, -1, false, results)
-        end
-    })
-
-    -- 5. Keymaps for this buffer
-    local opts = { buffer = buf, noremap = true }
-    
-    -- Enter: Open the file (Supports 'startinsert' context)
-    vim.keymap.set('i', '<CR>', function()
-        local cursor_line = vim.api.nvim_win_get_cursor(win)[1]
-        -- If on prompt (line 1), pick the first result (line 2), otherwise pick current line
-        local target_line = (cursor_line == 1) and 2 or cursor_line
-        local file = vim.api.nvim_buf_get_lines(buf, target_line - 1, target_line, false)[1]
-        
-        if file then
-            vim.api.nvim_win_close(win, true)
-            vim.cmd("e " .. file)
-        end
-    end, opts)
-
-    -- Tab / S-Tab navigation
-    vim.keymap.set('i', '<Tab>', '<Down>', opts)
-    vim.keymap.set('i', '<S-Tab>', '<Up>', opts)
-    vim.keymap.set('i', '<Esc>', function() vim.api.nvim_win_close(win, true) end, opts)
-end
-
-vim.keymap.set("n", "<leader>f", fuzzy_finder, { noremap = true, silent = true })
---
 -- Appearance
 vim.cmd.colorscheme 'habamax'
 vim.opt.clipboard = "unnamedplus"
