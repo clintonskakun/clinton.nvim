@@ -18,6 +18,23 @@ require('lazy').setup({
 	{ 'jghauser/mkdir.nvim' },
 	-- Icons
 	{ 'nvim-tree/nvim-web-devicons' },
+	{
+		'nvim-treesitter/nvim-treesitter',
+		lazy = false,
+		build = ':TSUpdate',
+		branch = 'master',
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "c", "zig", "rust", "go", "haskell", "lua", "gitignore" },
+				sync_install = true,
+				auto_install = true,
+				highlight = {
+					enable = true
+				},
+				additional_vim_regex_highlighting = false
+			});
+		end
+	}
 	-- Obvious why we need this
 	{
 		'nvim-telescope/telescope.nvim',
