@@ -34,7 +34,7 @@ require('lazy').setup({
 				additional_vim_regex_highlighting = false
 			})
 		end
-	}
+	},
 	-- Obvious why we need this
 	{
 		'nvim-telescope/telescope.nvim',
