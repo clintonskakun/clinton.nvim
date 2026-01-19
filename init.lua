@@ -72,26 +72,117 @@ require('lazy').setup({
 		})
 	end
 	},
-
--- Completion stuff
-{ 'hrsh7th/nvim-cmp' },
-{ 'hrsh7th/cmp-buffer' },
-{ 'hrsh7th/cmp-path' },
-
--- Language server stuff for indexing our project so we can
--- get symbols from files around the project
-{ 'neovim/nvim-lspconfig' },
-{ 'hrsh7th/cmp-nvim-lsp' },
-{ 'williamboman/mason.nvim' },
-{ 'williamboman/mason-lspconfig.nvim' },
-{ 'onsails/lspkind.nvim' }, -- icons for those menus
 })
+
+vim.lsp.config['ts_ls'] = {
+  cmd = { 'typescript-language-server', '--stdio' },
+  filetypes = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact' },
+  root_markers = { 'package.json', 'tsconfig.json', '.git' },
+}
+
+vim.lsp.config['svelte'] = {
+  cmd = { 'svelteserver', '--stdio' },
+  filetypes = { 'svelte' },
+  root_markers = { 'svelte.config.js', 'package.json', '.git' },
+}
+
+vim.lsp.config['prisma'] = {
+  cmd = { 'prisma-language-server', '--stdio' },
+  filetypes = { 'prisma' },
+  root_markers = { 'schema.prisma', '.git' },
+}
+
+local servers = { 'ts_ls', 'svelte', 'prisma' }
+for _, server in ipairs(servers) do
+  vim.lsp.enable(server)
+end
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local buf = args.buf
+
+    -- Enable Native Autocomplete via <C-x><C-o>
+    vim.bo[buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    -- Keymaps
+    local opts = { buffer = buf }
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)     -- Go to Definition
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)           -- Hover Documentation
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts) -- Rename
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts) -- Code Actions
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)   -- Previous Error
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)   -- Next Error
+  end,
+})
+
+vim.diagnostic.config({
+	underline = true,
+	virtual_text = true,
+	signs = true,
+	float = {
+		border = "rounded",
+	}
+});
+
+-- Diagnosis Counts
+function GetDiagnosisCounts()
+	-- Get counts for ONLY ERRORS in the current buffer
+	local errors = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+	local total = #errors
+
+	if total > 0 then
+		return "🔴" .. tostring(total) .. " "
+	else
+		return ""
+	end
+end
+
+function GetErrorLines()
+	local max_lines = 5
+	local bufnr = vim.api.nvim_get_current_buf()
+
+	-- Get diagnostics filtered strictly for ERRORS
+	local diagnostics = vim.diagnostic.get(bufnr, { severity = vim.diagnostic.severity.ERROR })
+
+	if #diagnostics == 0 then
+		return ""
+	end
+
+	-- Collect unique line numbers (1-based)
+	local lines_seen = {}
+	local unique_lines = {}
+
+	for _, diag in ipairs(diagnostics) do
+		local line = diag.lnum + 1
+		if not lines_seen[line] then
+			lines_seen[line] = true
+			table.insert(unique_lines, line)
+			if #unique_lines == max_lines then
+				break
+			end
+		end
+	end
+
+	if #unique_lines == 0 then
+		return ""
+	end
+
+	table.sort(unique_lines) 
+
+	return "Lines " .. table.concat(unique_lines, ", ") .. "... "
+end
 
 local keymap = vim.keymap.set
 
 -- Key mappings
 vim.g.mapleader = ' '
 vim.g.localleader = ' '
+--
+-- <leader>a -> Triggers LSP (Omni) Completion
+vim.keymap.set('i', '<leader>a', '<C-x><C-o>', { noremap = true, silent = true })
+
+-- <leader>u -> Triggers Path (File) Completion
+vim.keymap.set('i', '<leader>u', '<C-x><C-f>', { noremap = true, silent = true })
 
 -- Telescope
 local builtin = require('telescope.builtin')
@@ -151,103 +242,7 @@ end
 -- Set your keybind (normal mode)
 keymap("n", "<leader>p", toggle_term_in_buf_dir, { noremap = true, silent = true, desc = 'Open floating terminal in current buffer directory' })
 
-vim.diagnostic.config({
-	underline = true,
-	virtual_text = true,
-	signs = true,
-	float = {
-		border = "rounded",
-	}
-});
 
--- LSP
-local cmp = require('cmp')
-local lspkind = require('lspkind')
-local types = require('cmp.types')
-
-cmp.setup({
-	mapping = cmp.mapping.preset.insert({
-		['<Tab>'] = cmp.mapping.select_next_item({ behavior = types.cmp.SelectBehavior.Select }),
-		['<S-Tab>'] = cmp.mapping.select_prev_item({ behavior = types.cmp.SelectBehavior.Select }),
-		['<Enter>'] = cmp.mapping.confirm({ select = false }),
-	}),
-	sources = cmp.config.sources({
-		{
-			name = 'nvim_lsp',
-			entry_filter = function(entry)
-				local kind = entry:get_kind()
-				return kind ~= types.lsp.CompletionItemKind.Text
-				and kind ~= types.lsp.CompletionItemKind.Keyword
-				and kind ~= types.lsp.CompletionItemKind.Constant
-			end
-		},
-	}, {
-		{ name = 'path' },
-	}),
-	formatting = {
-		format = lspkind.cmp_format({
-			mode = 'symbol_text',
-			maxwidth = 50,
-		})
-	}
-})
-
--- Setup mason so it can manage LSP servers
-require('mason').setup()
-require('mason-lspconfig').setup()
-
--- Setup language servers.
-require('mason-lspconfig').setup({
-	ensure_installed = { 'prismals', 'svelte', 'ts_ls' }
-})
-
--- Diagnosis Counts
-function GetDiagnosisCounts()
-	-- Get counts for ONLY ERRORS in the current buffer
-	local errors = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-	local total = #errors
-
-	if total > 0 then
-		return "🔴" .. tostring(total) .. " "
-	else
-		return ""
-	end
-end
-
-function GetErrorLines()
-	local max_lines = 5
-	local bufnr = vim.api.nvim_get_current_buf()
-
-	-- Get diagnostics filtered strictly for ERRORS
-	local diagnostics = vim.diagnostic.get(bufnr, { severity = vim.diagnostic.severity.ERROR })
-
-	if #diagnostics == 0 then
-		return ""
-	end
-
-	-- Collect unique line numbers (1-based)
-	local lines_seen = {}
-	local unique_lines = {}
-
-	for _, diag in ipairs(diagnostics) do
-		local line = diag.lnum + 1
-		if not lines_seen[line] then
-			lines_seen[line] = true
-			table.insert(unique_lines, line)
-			if #unique_lines == max_lines then
-				break
-			end
-		end
-	end
-
-	if #unique_lines == 0 then
-		return ""
-	end
-
-	table.sort(unique_lines) 
-
-	return "Lines " .. table.concat(unique_lines, ", ") .. "... "
-end
 
 -- Appearance
 vim.cmd.colorscheme 'habamax'
