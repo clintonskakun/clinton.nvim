@@ -275,3 +275,6 @@ vim.api.nvim_create_user_command("W", "write", { nargs = 0 })
 -- Navigate between buffers
 vim.keymap.set('n', '<Tab>', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 vim.keymap.set('n', '<S-Tab>', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
+
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
