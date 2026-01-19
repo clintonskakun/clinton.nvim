@@ -32,7 +32,7 @@ require('lazy').setup({
 					enable = true
 				},
 				additional_vim_regex_highlighting = false
-			});
+			})
 		end
 	}
 	-- Obvious why we need this
