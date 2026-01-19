@@ -219,6 +219,7 @@ vim.api.nvim_create_autocmd('TermOpen', {
 	callback = function()
 		local opts = { buffer = 0 }
 		vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], opts)
+		vim.keymap.set('n', '<Esc>', ":q", opts)
 	end,
 	desc = 'Set terminal keymaps on open',
 })
