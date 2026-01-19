@@ -20,23 +20,6 @@ require("nvim-treesitter.configs").setup({
 	additional_vim_regex_highlighting = false
 })
 
-require('telescope').setup({
-	defaults = {
-		path_display = { 'full' },
-
-		layout_strategy = 'vertical',
-
-		layout_config = {
-			width = 0.95,
-			height = 0.95,
-			vertical = {
-				mirror = true,
-				preview_height = 0.6,
-			}
-		},
-	}
-})
-
 vim.lsp.config['ts_ls'] = {
   cmd = { 'typescript-language-server', '--stdio' },
   filetypes = { 'typescript', 'javascript' },
@@ -139,26 +122,34 @@ local keymap = vim.keymap.set
 vim.g.mapleader = ' '
 vim.g.localleader = ' '
 
--- Telescope
-local builtin = require('telescope.builtin')
+local state = { buf = -1, win = -1 }
 
-vim.api.nvim_create_user_command(
-	'LiveGrepFixed',
-	function()
-		builtin.live_grep({
-			-- This flag tells ripgrep (rg) to treat the pattern as a literal string.
-			additional_args = { '--fixed-strings' }
-		})
-	end,
-	{ desc = 'Live Grep (Fixed Strings/No Regex)' }
-)
+local function toggle_terminal()
+    if vim.api.nvim_win_is_valid(state.win) then
+        vim.api.nvim_win_hide(state.win)
+    else
+        if not vim.api.nvim_buf_is_valid(state.buf) then
+            state.buf = vim.api.nvim_create_buf(false, true) -- Create scratch buffer
+        end
+        
+        local width = math.floor(vim.o.columns * 0.8)
+        local height = math.floor(vim.o.lines * 0.8)
+        local col = math.floor((vim.o.columns - width) / 2)
+        local row = math.floor((vim.o.lines - height) / 2)
 
-keymap('n', '<leader>f', builtin.find_files, { desc = 'Find files' })
-keymap('n', '<leader>g', ':LiveGrepFixed<CR>', { desc = 'Live grep' })
-keymap('n', '<leader>r', builtin.resume, { desc = 'Resume last search' })
+        state.win = vim.api.nvim_open_win(state.buf, true, {
+            relative = "editor", style = "minimal", border = "rounded",
+            width = width, height = height, col = col, row = row
+        })
 
--- Toggle floating terminal
-keymap('n', '<leader>t', '<cmd>ToggleTerm<CR>', { desc = 'Toggle terminal' })
+        if vim.bo[state.buf].buftype ~= "terminal" then
+            vim.cmd.terminal()
+        end
+        vim.cmd("startinsert")
+    end
+end
+
+vim.keymap.set({ "n" }, "<leader>t", toggle_terminal, { noremap = true, silent = true })
 
 -- This function will be called when a terminal is opened
 local function set_terminal_keymaps()
