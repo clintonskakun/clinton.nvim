@@ -7,9 +7,11 @@ vim.pack.add({
 	}
 })
 
+-- Treesitter
+
 require("nvim-treesitter.configs").setup({
 	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "lua", "gitignore" },
-	sync_install = true,
+	sync_install = false,
 	auto_install = true,
 	highlight = {
 		enable = true
@@ -17,11 +19,15 @@ require("nvim-treesitter.configs").setup({
 	additional_vim_regex_highlighting = false
 })
 
-vim.lsp.config['ts_ls'] = {
+-- LSPs
+
+vim.lsp.config['ts'] = {
   cmd = { 'typescript-language-server', '--stdio' },
   filetypes = { 'typescript', 'javascript' },
   root_markers = { 'package.json', 'tsconfig.json', '.git' },
 }
+
+vim.lsp.enable("ts");
 
 vim.lsp.config['svelte'] = {
   cmd = { 'svelteserver', '--stdio' },
@@ -29,16 +35,15 @@ vim.lsp.config['svelte'] = {
   root_markers = { 'svelte.config.js', 'package.json', '.git' },
 }
 
+vim.lsp.enable("svelte");
+
 vim.lsp.config['prisma'] = {
   cmd = { 'prisma-language-server', '--stdio' },
   filetypes = { 'prisma' },
   root_markers = { 'schema.prisma', '.git' },
 }
 
-local servers = { 'ts_ls', 'svelte', 'prisma' }
-for _, server in ipairs(servers) do
-  vim.lsp.enable(server)
-end
+vim.lsp.enable("prisma");
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
@@ -121,40 +126,60 @@ vim.g.localleader = ' '
 
 local state = { buf = -1, win = -1 }
 
-local function toggle_terminal()
-    if vim.api.nvim_win_is_valid(state.win) then
-        vim.api.nvim_win_hide(state.win)
-    else
-        if not vim.api.nvim_buf_is_valid(state.buf) then
-            state.buf = vim.api.nvim_create_buf(false, true) -- Create scratch buffer
-        end
-        
-        local width = math.floor(vim.o.columns * 0.8)
-        local height = math.floor(vim.o.lines * 0.8)
-        local col = math.floor((vim.o.columns - width) / 2)
-        local row = math.floor((vim.o.lines - height) / 2)
+local function open_float()
+    if not vim.api.nvim_buf_is_valid(state.buf) then
+	    state.buf = vim.api.nvim_create_buf(false, true) 
+    end
 
-        state.win = vim.api.nvim_open_win(state.buf, true, {
-            relative = "editor", style = "minimal", border = "rounded",
-            width = width, height = height, col = col, row = row
-        })
+    if vim.api.nvim_win_is_valid(state.win) then 
+	    return
+    end
 
-        if vim.bo[state.buf].buftype ~= "terminal" then
-            vim.cmd.terminal()
-        end
-        vim.cmd("startinsert")
+    local width,
+    	  height = math.floor(vim.o.columns * 0.8),
+                   math.floor(vim.o.lines * 0.8)
+
+    state.win = vim.api.nvim_open_win(state.buf, true, {
+        relative = "editor", style = "minimal", border = "rounded",
+        width = width,
+	height = height,
+	col = (vim.o.columns - width)/2,
+	row = (vim.o.lines - height)/2
+    })
+    
+    if vim.bo[state.buf].buftype ~= "terminal" then 
+	    vim.cmd.terminal() 
+    end
+
+    vim.cmd("startinsert")
+end
+
+local function toggle_term()
+    if vim.api.nvim_win_is_valid(state.win) then 
+	    vim.api.nvim_win_hide(state.win) 
+    else 
+	    open_float() 
     end
 end
 
-vim.keymap.set({ "n" }, "<leader>t", toggle_terminal, { noremap = true, silent = true })
+local function term_in_dir()
+    local dir = vim.fn.expand('%:p:h') -- Get directory of current buffer
+
+    open_float()
+
+    -- Send 'cd <dir>' and 'Enter' (\r) to the terminal job
+    vim.api.nvim_chan_send(vim.b[state.buf].terminal_job_id, "cd " .. dir .. "\r")
+end
+
+-- Keymaps
+vim.keymap.set("n", "<leader>t", toggle_term, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>p", term_in_dir, { noremap = true, silent = true })
 
 -- Create an autocommand that runs our function on the TermOpen event
 vim.api.nvim_create_autocmd('TermOpen', {
 	pattern = 'term://*',
 	callback = function()
-		-- Set options for the keymap to be buffer-local
 		local opts = { buffer = 0 }
-		-- Map <Esc> in terminal mode to exit to normal mode
 		vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], opts)
 	end,
 	desc = 'Set terminal keymaps on open',
