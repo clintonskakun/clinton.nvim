@@ -148,43 +148,18 @@ end
 
 vim.keymap.set({ "n" }, "<leader>t", toggle_terminal, { noremap = true, silent = true })
 
--- This function will be called when a terminal is opened
-local function set_terminal_keymaps()
-	-- Set options for the keymap to be buffer-local
-	local opts = { buffer = 0 }
-	-- Map <Esc> in terminal mode to exit to normal mode
-	vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], opts)
-end
-
 -- Create an autocommand that runs our function on the TermOpen event
 vim.api.nvim_create_autocmd('TermOpen', {
 	pattern = 'term://*',
 	callback = function()
-		set_terminal_keymaps()
+		-- Set options for the keymap to be buffer-local
+		local opts = { buffer = 0 }
+		-- Map <Esc> in terminal mode to exit to normal mode
+		vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], opts)
 	end,
 	desc = 'Set terminal keymaps on open',
 })
-
-local Terminal = require("toggleterm.terminal").Terminal
-
-local function toggle_term_in_buf_dir()
-	local buf_dir = vim.fn.expand("%:p:h")
-	if vim.fn.isdirectory(buf_dir) == 1 then
-		local term = Terminal:new({
-			dir = buf_dir,
-			direction = "float", 
-			close_on_exit = true,
-			hidden = true
-		})
-		term:toggle()
-	else
-		print("No valid directory for current buffer.")
-	end
-end
-
--- Set your keybind (normal mode)
-keymap("n", "<leader>p", toggle_term_in_buf_dir, { noremap = true, silent = true, desc = 'Open floating terminal in current buffer directory' })
-
+--
 -- Appearance
 vim.cmd.colorscheme 'habamax'
 vim.opt.clipboard = "unnamedplus"
