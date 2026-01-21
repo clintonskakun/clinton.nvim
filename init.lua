@@ -54,7 +54,7 @@ vim.keymap.set('n', '<leader>r', function()
 end, { desc = 'Resume last picker' })
 
 require("nvim-treesitter.configs").setup({
-	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "lua", "gitignore" },
+	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "lua", "gitignore", "css", "yaml" },
 	sync_install = false,
 	auto_install = true,
 	highlight = {
@@ -278,3 +278,5 @@ vim.keymap.set('n', '<S-Tab>', '<cmd>bprevious<CR>', { desc = 'Go to previous bu
 
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
+
+require("finder")
