@@ -236,6 +236,7 @@ vim.keymap.set('n', '<Tab>', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 vim.keymap.set('n', '<S-Tab>', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
 
 vim.opt.list = true
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 vim.opt.listchars = {
     tab = '│ ',
