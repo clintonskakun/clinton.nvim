@@ -26,7 +26,7 @@ local State = {
 }
 
 local function get_git_root()
-    local current_dir = fn.expand('%:p:h')
+    local current_dir = fn.getcwd()
     local git_dir = fn.finddir('.git', current_dir .. ';')
 
     if git_dir ~= "" then
