@@ -9,7 +9,6 @@ api.nvim_set_hl(0, 'FinderMatch', { fg = '#569CD6', bold = true })
 api.nvim_set_hl(0, 'FinderBorder', { fg = '#000000' })
 
 local input_augroup = api.nvim_create_augroup('SimpleFinderInput', { clear = true })
-local list_start_index = 3
 local current_job_id = nil
 
 local State = {
@@ -21,7 +20,7 @@ local State = {
   root_dir = nil,
   all_data = {},
   filtered_data = {},
-  selection_idx = list_start_index,
+  selection_idx = 1,
   query = ""
 }
 
@@ -128,7 +127,7 @@ local function render_list()
   if #display_lines > 0 then
     -- Clamp selection
     if State.selection_idx > #display_lines then State.selection_idx = #display_lines end
-    if State.selection_idx < list_start_index then State.selection_idx = list_start_index end
+    if State.selection_idx < 1 then State.selection_idx = 1 end
 
     api.nvim_buf_add_highlight(State.buf_list, ns_id, 'FinderSelection', State.selection_idx - 1, 0, -1)
 
@@ -184,7 +183,7 @@ local function execute_search()
 
       if exit_code == 0 then
         State.filtered_data = stdout
-        State.selection_idx = list_start_index
+        State.selection_idx = 1
         vim.schedule(render_list)
       end
     end
@@ -193,7 +192,7 @@ end
 
 local function on_key_action(action)
   if action == 'up' then
-    if State.selection_idx > list_start_index then
+    if State.selection_idx > 1 then
       State.selection_idx = State.selection_idx - 1
 
       render_list()
@@ -270,7 +269,7 @@ local function start(mode)
   local width = vim.o.columns
   local height = vim.o.lines
 
-  local input_height = 1
+  local input_height = 3
   local remaining_height = height - input_height - 2 -- minus borders/padding
   local list_height = remaining_height
 
