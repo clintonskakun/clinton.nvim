@@ -10,12 +10,15 @@ vim.pack.add({
 })
 
 require("nvim-treesitter.configs").setup({
-	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "lua", "gitignore", "css", "yaml" },
+	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "gitignore", "css", "yaml", "c", "lua" },
 	sync_install = false,
 	auto_install = true,
 	highlight = {
 		enable = true
 	},
+  indent = {
+    enable = true,
+  },
 	additional_vim_regex_highlighting = false
 })
 
@@ -231,6 +234,14 @@ vim.api.nvim_create_user_command("W", "write", { nargs = 0 })
 -- Navigate between buffers
 vim.keymap.set('n', '<Tab>', '<cmd>bnext<CR>', { desc = 'Go to next buffer' })
 vim.keymap.set('n', '<S-Tab>', '<cmd>bprevious<CR>', { desc = 'Go to previous buffer' })
+
+vim.opt.list = true
+
+vim.opt.listchars = {
+    tab = '│ ',
+    leadmultispace = '│ ',
+    trail = '·',
+}
 
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
