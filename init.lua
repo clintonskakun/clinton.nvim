@@ -10,7 +10,7 @@ vim.pack.add({
 })
 
 require("nvim-treesitter.configs").setup({
-	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "gitignore", "css", "yaml", "c", "lua" },
+	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "gitignore", "css", "yaml", "c", "lua", "python" },
 	sync_install = false,
 	auto_install = true,
 	highlight = {
@@ -22,10 +22,29 @@ require("nvim-treesitter.configs").setup({
 	additional_vim_regex_highlighting = false
 })
 
+local function make_capabilities()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  
+  -- Enable snippet support (crucial for auto-imports)
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  
+  -- Tell the server we support 'resolve', which lazy-loads the import data
+  capabilities.textDocument.completion.completionItem.resolveSupport = {
+    properties = {
+      'documentation',
+      'detail',
+      'additionalTextEdits',
+    },
+  }
+  
+  return capabilities
+end
+
 vim.lsp.config['ts'] = {
   cmd = { 'typescript-language-server', '--stdio' },
   filetypes = { 'typescript', 'javascript' },
   root_markers = { 'package.json', 'tsconfig.json', '.git' },
+  capabilities = make_capabilities()
 }
 
 vim.lsp.enable("ts");
@@ -34,6 +53,7 @@ vim.lsp.config['svelte'] = {
   cmd = { 'svelteserver', '--stdio' },
   filetypes = { 'svelte' },
   root_markers = { 'svelte.config.js', 'package.json', '.git' },
+  capabilities = make_capabilities()
 }
 
 vim.lsp.enable("svelte");
