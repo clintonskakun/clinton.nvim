@@ -269,8 +269,8 @@ local function start(mode)
   local width = vim.o.columns
   local height = vim.o.lines
 
-  local input_height = 3
-  local remaining_height = height - input_height - 2 -- minus borders/padding
+  local input_height = 1
+  local remaining_height = height - input_height -- minus borders/padding
   local list_height = remaining_height
 
   local win_opts = {
