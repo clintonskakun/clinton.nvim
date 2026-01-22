@@ -276,7 +276,6 @@ local function start(mode)
   local win_opts = {
     style = "minimal",
     relative = "editor",
-    border = "single"
   }
 
   State.buf_list = api.nvim_create_buf(false, true)
