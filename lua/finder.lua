@@ -289,7 +289,7 @@ local function start(mode)
   State.win_input = api.nvim_open_win(State.buf_input, true, input_opts)
 
   local list_opts = vim.tbl_extend("force", win_opts, {
-    row = input_height + 2, col = 0, width = width, height = list_height,
+    row = input_height + 5, col = 0, width = width, height = list_height,
   })
   State.win_list = api.nvim_open_win(State.buf_list, false, list_opts)
 
