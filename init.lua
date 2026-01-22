@@ -7,51 +7,7 @@ vim.pack.add({
 		src = 'https://github.com/nvim-treesitter/nvim-treesitter',
 		version = 'v0.10.0',
 	},
-	"https://github.com/nvim-mini/mini.pick"
 })
-
-local MiniPick = require("mini.pick")
-
-MiniPick.setup({
-	window = {
-		config = {
-			-- Fullscreen dimensions
-			height = vim.o.lines,
-			width = vim.o.columns,
-			-- Top-left corner
-			row = 0,
-			col = 0,
-			-- Remove border for true fullscreen look (optional)
-			border = 'none', 
-		}
-	}
-})
-
-
-vim.keymap.set('n', '<leader>f', function()
-  MiniPick.builtin.files()
-end, { desc = 'Find Files' })
-
-vim.keymap.set('n', '<leader>g', function()
-  MiniPick.builtin.grep_live(
-    { 
-      tool = 'rg', 
-      command = { 
-        'rg', 
-        '--column', 
-        '--line-number', 
-        '--no-heading', 
-        '--color=always', 
-        '--smart-case', 
-        '--fixed-strings' -- This flag disables Regex
-      } 
-    }
-  )
-end, { desc = 'Grep Fixed String' })
-
-vim.keymap.set('n', '<leader>r', function()
-  MiniPick.builtin.resume()
-end, { desc = 'Resume last picker' })
 
 require("nvim-treesitter.configs").setup({
 	ensure_installed = { "html", "svelte", "javascript", "typescript", "bash", "json", "prisma", "sql", "markdown", "csv", "lua", "gitignore", "css", "yaml" },
