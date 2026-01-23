@@ -206,7 +206,7 @@ local function on_key_action(action)
   elseif action == 'enter' then
     local item, _ = parse_ansi(State.filtered_data[State.selection_idx], 1)
 
-    if item then
+    if #item > 0 then
       close_window()
 
       local filename = item
