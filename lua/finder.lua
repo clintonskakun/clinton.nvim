@@ -204,9 +204,15 @@ local function on_key_action(action)
       render_list()
     end
   elseif action == 'enter' then
-    local item, _ = parse_ansi(State.filtered_data[State.selection_idx], 1)
+    local line = State.filtered_data[State.selection_idx];
 
-    if #item > 0 then
+    if line == nil then
+      return
+    end
+
+    local item, _ = parse_ansi(line, 1)
+
+    if item then
       close_window()
 
       local filename = item
