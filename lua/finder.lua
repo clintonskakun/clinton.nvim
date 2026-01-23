@@ -282,13 +282,11 @@ local function start(mode)
 
   local input_opts = vim.tbl_extend("force", win_opts, {
     row = 0, col = 0, width = width, height = input_height,
-    title = (State.mode == 'files' and " Find File " or " Grep "),
-    title_pos = "center"
   })
   State.win_input = api.nvim_open_win(State.buf_input, true, input_opts)
 
   local list_opts = vim.tbl_extend("force", win_opts, {
-    row = input_height + 5, col = 0, width = width, height = list_height,
+    row = 1, col = 0, width = width, height = list_height - 1,
   })
   State.win_list = api.nvim_open_win(State.buf_list, false, list_opts)
 
