@@ -207,7 +207,7 @@ local function on_key_action(action)
 
       render_list()
     end
-  elseif action = 'clear' then
+  elseif action == 'clear' then
     State.selection_idx = 1
     State.filtered_data = nil
     State.query = nil
