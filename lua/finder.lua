@@ -290,6 +290,8 @@ local function start(mode)
 
   api.nvim_set_option_value('bufhidden', 'hide', { buf = State.buf_input })
   api.nvim_set_option_value('bufhidden', 'hide', { buf = State.buf_list })
+  api.nvim_set_option_value('undolevels', -1, { buf = State.buf_input })
+  api.nvim_set_option_value('undolevels', -1, { buf = State.buf_list })
 
   setup_input_buffer()
 
