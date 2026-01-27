@@ -178,6 +178,10 @@ local function execute_search()
       current_job_id = nil
 
       if exit_code == 0 then
+        State.filtered_data = nil
+
+        collectgarbage("step", 1000)
+
         State.filtered_data = stdout
         State.selection_idx = 1
         vim.schedule(render_list)
