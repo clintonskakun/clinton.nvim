@@ -54,8 +54,6 @@ local function close_window()
   current_job_id = nil
 
   vim.cmd('stopinsert')
-
-  State.filtered_data = {}
 end
 
 local function parse_ansi(line, lnum)
@@ -266,8 +264,7 @@ end
 local function start(mode)
   State.mode = mode
   State.root_dir = get_git_root()
-
-  State.filtered_data = {}
+  State.selection_idx = 1
 
   local width = vim.o.columns
   local height = vim.o.lines
