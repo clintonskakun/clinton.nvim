@@ -207,6 +207,11 @@ local function on_key_action(action)
 
       render_list()
     end
+  elseif action = 'clear' then
+    State.selection_idx = 1
+    State.filtered_data = nil
+    State.query = nil
+    api.nvim_buf_set_lines(State.buf_input, 0, -1, false, {})
   elseif action == 'enter' then
     local line = State.filtered_data[State.selection_idx];
 
@@ -249,6 +254,7 @@ local function setup_input_buffer()
   vim.keymap.set('i', '<Tab>', function() on_key_action('down') end, opts)
   vim.keymap.set('i', '<S-Tab>', function() on_key_action('up') end, opts)
   vim.keymap.set('i', '<CR>', function() on_key_action('enter') end, opts)
+  vim.keymap.set('i', '<leader><Backspace>', function() on_key_action('clear') end, opts)
   vim.keymap.set('n', '<Esc>', close_window, opts)
   vim.keymap.set('i', '<Esc>', close_window, opts)
 
