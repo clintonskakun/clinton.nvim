@@ -182,6 +182,7 @@ local function execute_search()
       current_job_id = nil
 
       if exit_code == 0 then
+        table.sort(stdout)
         State.filtered_data = stdout
         State.selection_idx = 1
         vim.schedule(render_list)
