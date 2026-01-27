@@ -140,6 +140,10 @@ local function render_list()
 end
 
 local function execute_search()
+  State.filtered_data = nil
+
+  collectgarbage("collect")
+
   -- Initialize results container
   local stdout = {}
 
@@ -178,9 +182,7 @@ local function execute_search()
       current_job_id = nil
 
       if exit_code == 0 then
-        State.filtered_data = nil
 
-        collectgarbage("step", 1000)
 
         State.filtered_data = stdout
         State.selection_idx = 1
