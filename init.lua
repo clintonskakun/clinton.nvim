@@ -46,7 +46,7 @@ vim.lsp.config['ts'] = {
     '--stdio',
     '--tsserver-log-verbosity',
     'off',
-    '--max-old-space-size=4096'
+    '--max-old-space-size=1096'
   },
   filetypes = { 'typescript' },
   root_markers = { 'package.json', 'tsconfig.json', '.git' },
@@ -56,7 +56,11 @@ vim.lsp.config['ts'] = {
 vim.lsp.enable("ts");
 
 vim.lsp.config['svelte'] = {
-  cmd = { 'svelteserver', '--stdio' },
+  cmd = {
+    'svelteserver',
+    '--stdio',
+    '--max-old-space-size=2096'
+  },
   filetypes = { 'svelte' },
   root_markers = { 'svelte.config.js', 'package.json', '.git' },
   capabilities = make_capabilities()
