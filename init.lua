@@ -41,8 +41,14 @@ local function make_capabilities()
 end
 
 vim.lsp.config['ts'] = {
-  cmd = { 'typescript-language-server', '--stdio' },
-  filetypes = { 'typescript', 'javascript' },
+  cmd = {
+    'typescript-language-server',
+    '--stdio',
+    '--tsserver-log-verbosity',
+    'off',
+    '--max-old-space-size=4096'
+  },
+  filetypes = { 'typescript' },
   root_markers = { 'package.json', 'tsconfig.json', '.git' },
   capabilities = make_capabilities()
 }
