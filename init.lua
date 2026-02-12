@@ -85,6 +85,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)           -- Hover Documentation
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)   -- Previous Error
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)   -- Next Error
+    vim.keymap.set('n', '<leader>c', vim.lsp.buf.code_action, { buffer = buf, desc = "LSP: Code Action" })
   end,
 })
 

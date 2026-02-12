@@ -14,11 +14,10 @@ local current_job_id = nil
 local State = {
   mode = 'files',
   buf_input = api.nvim_create_buf(false, true),
-  buf_list = nil,
+  buf_list = api.nvim_create_buf(false, true),
   win_input = nil,
   win_list = nil,
   root_dir = nil,
-  all_data = {},
   filtered_data = {},
   selection_idx = 1,
   query = ""
@@ -56,8 +55,7 @@ local function close_window()
 
   vim.cmd('stopinsert')
 
-  State.all_data = {}
-  State.filtered_data = {}
+  collectgarbage("collect")
 end
 
 local function parse_ansi(line, lnum)
@@ -174,7 +172,13 @@ local function execute_search()
     on_stdout = function(_, data)
       if data then
         for _, line in ipairs(data) do
-          if line ~= "" then table.insert(stdout, line) end
+          if #stdout > 200 then
+            break
+          end
+
+          if line ~= "" then
+            table.insert(stdout, line)
+          end
         end
       end
     end,
@@ -203,6 +207,11 @@ local function on_key_action(action)
 
       render_list()
     end
+  elseif action == 'clear' then
+    State.selection_idx = 1
+    State.filtered_data = nil
+    State.query = nil
+    api.nvim_buf_set_lines(State.buf_input, 0, -1, false, {})
   elseif action == 'enter' then
     local line = State.filtered_data[State.selection_idx];
 
@@ -245,6 +254,7 @@ local function setup_input_buffer()
   vim.keymap.set('i', '<Tab>', function() on_key_action('down') end, opts)
   vim.keymap.set('i', '<S-Tab>', function() on_key_action('up') end, opts)
   vim.keymap.set('i', '<CR>', function() on_key_action('enter') end, opts)
+  vim.keymap.set('i', '<leader><Backspace>', function() on_key_action('clear') end, opts)
   vim.keymap.set('n', '<Esc>', close_window, opts)
   vim.keymap.set('i', '<Esc>', close_window, opts)
 
@@ -268,9 +278,7 @@ end
 local function start(mode)
   State.mode = mode
   State.root_dir = get_git_root()
-
-  State.all_data = {}
-  State.filtered_data = {}
+  State.selection_idx = 1
 
   local width = vim.o.columns
   local height = vim.o.lines
@@ -284,8 +292,6 @@ local function start(mode)
     relative = "editor",
   }
 
-  State.buf_list = api.nvim_create_buf(false, true)
-
   local input_opts = vim.tbl_extend("force", win_opts, {
     row = 0, col = 0, width = width, height = input_height,
   })
@@ -297,13 +303,15 @@ local function start(mode)
   State.win_list = api.nvim_open_win(State.buf_list, false, list_opts)
 
   api.nvim_set_option_value('bufhidden', 'hide', { buf = State.buf_input })
-  api.nvim_set_option_value('bufhidden', 'wipe', { buf = State.buf_list })
+  api.nvim_set_option_value('bufhidden', 'hide', { buf = State.buf_list })
+  api.nvim_set_option_value('undolevels', -1, { buf = State.buf_input })
+  api.nvim_set_option_value('undolevels', -1, { buf = State.buf_list })
 
   setup_input_buffer()
 
   vim.cmd('startinsert!')
 
-  execute_search()
+  render_list()
 end
 
 vim.keymap.set('n', '<leader>f', function() start('files') end, { noremap = true, silent = true })
