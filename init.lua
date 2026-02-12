@@ -44,7 +44,6 @@ vim.lsp.config['ts'] = {
   cmd = {
     'typescript-language-server',
     '--stdio',
-    '--max-old-space-size=1096'
   },
   filetypes = { 'typescript' },
   root_markers = { 'package.json', 'tsconfig.json', '.git' },
