@@ -44,8 +44,6 @@ vim.lsp.config['ts'] = {
   cmd = {
     'typescript-language-server',
     '--stdio',
-    '--tsserver-log-verbosity',
-    'off',
     '--max-old-space-size=1096'
   },
   filetypes = { 'typescript' },
